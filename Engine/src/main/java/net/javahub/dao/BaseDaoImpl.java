@@ -16,6 +16,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import net.javahub.example.BaseExample;
@@ -25,6 +26,7 @@ public class BaseDaoImpl<T, K extends Serializable> implements IBaseDao<T, K> {
 
 	private static SqlSessionFactory factory;
 	
+	@Autowired
 	private SqlSession injectedSqlSession;
 	
 	public static void init(String pathToConfigFile) throws IOException{
