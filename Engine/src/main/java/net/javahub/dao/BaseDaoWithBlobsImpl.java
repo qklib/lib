@@ -16,9 +16,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import net.javahub.example.BaseExample;
 
+@Repository
 public class BaseDaoWithBlobsImpl<T, K extends Serializable> implements IBaseDaoWithBlobs<T, K> {
 
 	private static SqlSessionFactory factory;
