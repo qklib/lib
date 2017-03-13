@@ -40,6 +40,10 @@ public class BaseDaoImpl<T, K extends Serializable> implements IBaseDao<T, K> {
 		factory=new SqlSessionFactoryBuilder().build(inputStream);
 	}
 	
+	public long countByExample(Class<T> clazz, BaseExample example) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		return (Long) invokeMapperMethod(clazz, "countByExample", false, new Class<?>[]{example.getClass()}, example);
+	}
+	
 	public int insert(T object) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, ClassNotFoundException {
 		return (Integer) invokeMapperMethod(object.getClass(), "insert", true, new Class<?>[]{object.getClass()}, object);
 	}

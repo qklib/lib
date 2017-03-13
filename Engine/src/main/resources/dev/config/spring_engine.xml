@@ -26,7 +26,7 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 	
 	<import resource="classpath*:dev/config/spring_application.xml"/>
-	
+	<import resource="classpath*:config/spring_application.xml"/>
 	<!-- 自动扫描 -->  
     <context:component-scan base-package="net.javahub" /> 
 	
