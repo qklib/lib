@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
 import net.javahub.example.BaseExample;
 
 @Repository
-public class BaseDaoImpl<T, K extends Serializable> implements IBaseDao<T, K> {
+public class BaseDaoImpl<T, K extends Serializable, E> implements IBaseDao<T, K, E> {
 
 	private static SqlSessionFactory factory;
 	
@@ -40,8 +40,8 @@ public class BaseDaoImpl<T, K extends Serializable> implements IBaseDao<T, K> {
 		factory=new SqlSessionFactoryBuilder().build(inputStream);
 	}
 	
-	public long countByExample(Class<T> clazz, BaseExample example) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		return (Long) invokeMapperMethod(clazz, "countByExample", false, new Class<?>[]{example.getClass()}, example);
+	public long countByExample(Class<T> objectClass, E example) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		return (Long) invokeMapperMethod(objectClass, "countByExample", false, new Class<?>[]{example.getClass()}, example);
 	}
 	
 	public int insert(T object) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, ClassNotFoundException {
@@ -57,27 +57,27 @@ public class BaseDaoImpl<T, K extends Serializable> implements IBaseDao<T, K> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public T selectByPrimaryKey(Class<T> clazz, K key) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		return (T) invokeMapperMethod(clazz, "selectByPrimaryKey", false, new Class<?>[]{key.getClass()}, key);
+	public T selectByPrimaryKey(Class<T> objectClass, K key) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		return (T) invokeMapperMethod(objectClass, "selectByPrimaryKey", false, new Class<?>[]{key.getClass()}, key);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> selectByExample(Class<T> clazz, BaseExample example) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		return (List<T>) invokeMapperMethod(clazz, "selectByExample", false, new Class<?>[]{example.getClass()}, example);
+	public List<T> selectByExample(Class<T> objectClass, E example) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		return (List<T>) invokeMapperMethod(objectClass, "selectByExample", false, new Class<?>[]{example.getClass()}, example);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> selectByExampleWithRowbounds(Class<T> clazz, BaseExample example, int offset, int limit) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public List<T> selectByExampleWithRowbounds(Class<T> objectClass, E example, int offset, int limit) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		RowBounds rowBounds=new RowBounds(offset, limit);
-		return (List<T>) invokeMapperMethod(clazz, "selectByExampleWithRowbounds", false, new Class<?>[]{example.getClass(),rowBounds.getClass()},example,rowBounds);
+		return (List<T>) invokeMapperMethod(objectClass, "selectByExampleWithRowbounds", false, new Class<?>[]{example.getClass(),rowBounds.getClass()},example,rowBounds);
 	}
 
-	public void batchInsert(Class<T> clazz, Collection<T> objectCollection) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void batchInsert(Class<T> objectClass, Collection<T> objectCollection) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		SqlSession session=null;
 		try{
 			session=getSqlSession(true);
-			Object mapperObject=getMapperObject(clazz, session);
-			Method method=getMapperMethod(clazz, mapperObject, "insert", new Class<?>[]{clazz});
+			Object mapperObject=getMapperObject(objectClass, session);
+			Method method=getMapperMethod(mapperObject, "insert", new Class<?>[]{objectClass});
 			for(T object: objectCollection){
 				method.invoke(mapperObject, object);
 			}
@@ -96,7 +96,7 @@ public class BaseDaoImpl<T, K extends Serializable> implements IBaseDao<T, K> {
 		try{
 			session=getSqlSession(true);
 			Object mapperObject=getMapperObject(objectClass, session);
-			Method method=getMapperMethod(objectClass, mapperObject, "deleteByPrimaryKey", new Class<?>[]{keyClass});
+			Method method=getMapperMethod(mapperObject, "deleteByPrimaryKey", new Class<?>[]{keyClass});
 			for(K key: keyCollection){
 				method.invoke(mapperObject, key);
 			}
@@ -110,12 +110,12 @@ public class BaseDaoImpl<T, K extends Serializable> implements IBaseDao<T, K> {
 		}
 	}
 	
-	public void batchUpdateByPrimaryKey(Class<T> clazz, Collection<T> objectCollection) throws ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public void batchUpdateByPrimaryKey(Class<T> objectClass, Collection<T> objectCollection) throws ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		SqlSession session=null;
 		try{
 			session=getSqlSession(true);
-			Object mapperObject=getMapperObject(clazz, session);
-			Method method=getMapperMethod(clazz, mapperObject, "updateByPrimaryKey", new Class<?>[]{clazz});
+			Object mapperObject=getMapperObject(objectClass, session);
+			Method method=getMapperMethod(mapperObject, "updateByPrimaryKey", new Class<?>[]{objectClass});
 			for(T object: objectCollection){
 				method.invoke(mapperObject, object);
 			}
@@ -129,13 +129,13 @@ public class BaseDaoImpl<T, K extends Serializable> implements IBaseDao<T, K> {
 		}
 	}
 	
-	private Object invokeMapperMethod(Class<?> clazz, String methodName, boolean isCommitRequired, Class<?>[] parameterTypes, Object ...args) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	private Object invokeMapperMethod(Class<?> objectClass, String methodName, boolean isCommitRequired, Class<?>[] parameterTypes, Object ...args) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		Object object=null;
 		SqlSession session=null;
 		try{
 			session=getSqlSession(false);
-			Object mapperObject=getMapperObject(clazz, session);
-			Method method=getMapperMethod(clazz, mapperObject, methodName, parameterTypes);
+			Object mapperObject=getMapperObject(objectClass, session);
+			Method method=getMapperMethod(mapperObject, methodName, parameterTypes);
 			object=method.invoke(mapperObject, args);
 			if((!session.equals(injectedSqlSession) && isCommitRequired)){
 				session.commit();
@@ -148,11 +148,11 @@ public class BaseDaoImpl<T, K extends Serializable> implements IBaseDao<T, K> {
 		return object;
 	}
 	
-	private Object getMapperObject(Class<?> clazz, SqlSession session) throws ClassNotFoundException{
-		return session.getMapper(Class.forName(getMapperClassName(clazz)));
+	private Object getMapperObject(Class<?> objectClass, SqlSession session) throws ClassNotFoundException{
+		return session.getMapper(Class.forName(getMapperClassName(objectClass)));
 	}
 	
-	private Method getMapperMethod(Class<?> clazz, Object mapperObject, String methodName, Class<?>[] parameterTypes) throws ClassNotFoundException, NoSuchMethodException, SecurityException{
+	private Method getMapperMethod(Object mapperObject, String methodName, Class<?>[] parameterTypes) throws ClassNotFoundException, NoSuchMethodException, SecurityException{
 		Class<?> mapperClass=mapperObject.getClass();
 		Method method=mapperClass.getMethod(methodName, parameterTypes);
 		return method;

@@ -18,10 +18,8 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import net.javahub.example.BaseExample;
-
 @Repository
-public class BaseDaoWithBlobsImpl<T, K extends Serializable> implements IBaseDaoWithBlobs<T, K> {
+public class BaseDaoWithBlobsImpl<T, K extends Serializable, E> implements IBaseDaoWithBlobs<T, K, E> {
 
 	private static SqlSessionFactory factory;
 	
@@ -44,12 +42,12 @@ public class BaseDaoWithBlobsImpl<T, K extends Serializable> implements IBaseDao
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> selectByExampleWithBLOBsWithRowbounds(Class<?> objectClass, BaseExample example, RowBounds rowBounds) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public List<T> selectByExampleWithBLOBsWithRowbounds(Class<?> objectClass, E example, RowBounds rowBounds) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		return (List<T>) invokeMapperMethod(objectClass, "selectByExampleWithBLOBsWithRowbounds", false, new Class<?>[]{example.getClass(),rowBounds.getClass()},example,rowBounds);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> selectByExampleWithBLOBs(Class<?> objectClass, BaseExample example) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public List<T> selectByExampleWithBLOBs(Class<?> objectClass, E example) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		return (List<T>) invokeMapperMethod(objectClass, "selectByExampleWithBLOBs", false, new Class<?>[]{example.getClass()}, example);
 	}
 
