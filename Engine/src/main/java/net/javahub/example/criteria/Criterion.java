@@ -2,6 +2,7 @@ package net.javahub.example.criteria;
 
 import java.util.List;
 
+@Deprecated
 public class Criterion {
     private String condition;
 

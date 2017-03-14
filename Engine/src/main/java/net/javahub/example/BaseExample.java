@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.javahub.example.criteria.Criteria;
 
+@Deprecated
 public class BaseExample {
 	
     protected String orderByClause;

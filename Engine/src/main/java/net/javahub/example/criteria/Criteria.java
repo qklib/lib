@@ -3,7 +3,7 @@ package net.javahub.example.criteria;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Deprecated
 public class Criteria {
     public List<Criterion> criteria;
 
