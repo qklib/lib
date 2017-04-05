@@ -18,13 +18,13 @@ public class BaseService<T, K extends Serializable, E> {
 	public BaseService(){
 	}
 	
-	public List<T> selectListByExample(Class<T> objectClass, E example) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	protected List<T> selectListByExample(Class<T> objectClass, E example) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		List<T> list=null;
 		list=baseDao.selectByExample(objectClass, example);
 		return list;
 	}
 	
-	public List<T> selectListByExampleWithRowBounds(Class<T> objectClass, E example, int offset, int limit) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	protected List<T> selectListByExampleWithRowBounds(Class<T> objectClass, E example, int offset, int limit) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		List<T> list=null;
 		list=baseDao.selectByExampleWithRowbounds(objectClass, example, offset, limit);
 		return list;
